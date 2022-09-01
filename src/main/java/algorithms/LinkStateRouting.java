@@ -399,10 +399,12 @@ public class LinkStateRouting {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese su nombre de usuario: ");
+        System.out.print("Ingrese su nombre de usuario (LinkStateRouting): ");
         String username = scanner.nextLine();
+        System.out.print("Ingrese su contraseña: ");
+        String password = scanner.nextLine();
 
-        LinkStateRouting routing = new LinkStateRouting(username, "bot_p123");
+        LinkStateRouting routing = new LinkStateRouting(username, password);
         routing.connect();
 
         while (true) {

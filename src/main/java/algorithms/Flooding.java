@@ -152,8 +152,10 @@ public class Flooding {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese su nombre de usuario (Flooding): ");
         String username = scanner.nextLine();
+        System.out.print("Ingrese su contraseña: ");
+        String password = scanner.nextLine();
 
-        Flooding flooding = new Flooding(username, "bot_p123");
+        Flooding flooding = new Flooding(username, password);
         flooding.connect();
 
         while (true){
