@@ -1,0 +1,33 @@
+
+bot1_prueba@alumchat.fun
+bot2_prueba@alumchat.fun
+bot3_pruebas@alumchat.fun
+bot4_pruebas@alumchat.fun
+bot5_pruebas@alumchat.fun
+bot6_prueba@alumchat.fun
+bot7_pruebas@alumchat.fun
+
+
+contrasena: bot_p123
+
+
+LINK STATE ROUTING PROTOCOLS
+
+Pasos:
+
+LINK STATE SHARING
+
+- Al iniciar el router manda su informacion (Hello world) sobre sus conexiones (Flooding) y el que lo recibe le manda esta informacion a los demas.
+
+- Hay refresh de informacion cada 30 minutos (para ejercicio cada 30 segundos)
+
+
+INFORMATION SEND 
+
+- se aplica el shortest path algorithm basado en el costo para mandar un mensaje
+
+- LSDB update
+
+C -> G -> B
+
+bot3_pruebas@alumchat.fun -> bot7_pruebas@alumchat.fun -> bot2_prueba@alumchat.fun
