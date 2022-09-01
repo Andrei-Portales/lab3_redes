@@ -1,3 +1,6 @@
+package xmpp;
+
+import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -10,7 +13,6 @@ public class Client {
         ConnectionConfiguration config = new ConnectionConfiguration(SERVER_HOST, SERVER_PORT);
         config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         config.setDebuggerEnabled(false);
-        config.setSendPresence(true);
 
         connection = new XMPPConnection(config);
 
@@ -21,4 +23,19 @@ public class Client {
             System.exit(1);
         }
     }
+
+    public void login (String username, String password){
+        try{
+            connection.login(username, password);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public XMPPConnection getConnection(){
+        return connection;
+    }
+
+
 }
