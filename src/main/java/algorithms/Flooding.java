@@ -14,6 +14,9 @@ import xmpp.Client;
 
 import java.util.*;
 
+/**
+ * Flooding algorithm implementacion con xmpp
+ */
 public class Flooding {
     private String username;
     private String password;
@@ -30,6 +33,11 @@ public class Flooding {
         this.names = Util.readnamesConfig();
     }
 
+    /**
+     * Obtener el identificador del nodo en el archivo de configuraciones
+     * @param user
+     * @return
+     */
     public String getUserIdentifier(String user) {
         Set<String> keys = names.keySet();
         for (String key : keys) {
@@ -40,6 +48,11 @@ public class Flooding {
         return null;
     }
 
+    /**
+     * Obtener los nodos vecinos de un nodo
+     * @param username
+     * @return
+     */
     public String[] getNeighbors(String username){
         String identifier = getUserIdentifier(username);
         String[] neighbors = topo.get(identifier);
@@ -52,6 +65,10 @@ public class Flooding {
         return emails.toArray(new String[emails.size()]);
     }
 
+    /**
+     * Metodo para reenviar o aceptar los mensajes entrantes
+     * @param message
+     */
     public void messageReceiver(JSONObject message){
         try{
 
@@ -99,6 +116,9 @@ public class Flooding {
         }
     }
 
+    /**
+     * Metodo para conectarse con el servidor de XMPP
+     */
     public void connect() {
         client.login(username, password);
 
@@ -128,6 +148,11 @@ public class Flooding {
         }, new PacketTypeFilter(Packet.class));
     }
 
+    /**
+     * Envia un mensaje a un destinatario
+     * @param to
+     * @param message
+     */
     public void sendMessage(String to, String message) {
         String[] neighbors = getNeighbors(username);
         JSONObject json = new JSONObject();

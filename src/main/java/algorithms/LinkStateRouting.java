@@ -13,6 +13,9 @@ import xmpp.Client;
 
 import java.util.*;
 
+/**
+ * Link State Routing algorithm implementacion con xmpp
+ */
 public class LinkStateRouting {
 
     private String username;
@@ -106,6 +109,10 @@ public class LinkStateRouting {
         }
     }
 
+    /**
+     * Este metodo prepara el routing table para ser posteriormente enviada en formato json
+     * @return
+     */
     private JSONObject getRoutingTable(){
         JSONObject routingJSON = new JSONObject();
 
@@ -121,6 +128,9 @@ public class LinkStateRouting {
         return routingJSON;
     }
 
+    /**
+     * Metodo que prepara nuestro mensaje que contiene el routing table para compartirla con los vecinos.
+     */
     public void sendPeriodicLSA() {
         JSONObject json = new JSONObject();
         json.put("type", "LSAACTU");
@@ -141,6 +151,9 @@ public class LinkStateRouting {
         }
     }
 
+    /**
+     * Configurar un intervalo para poder mandar configuracion a los demas nodos cada 10 segundos
+     */
     private void configuraLSATimer() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -151,6 +164,10 @@ public class LinkStateRouting {
         }, 0, 10000);
     }
 
+    /**
+     * Metodo para actualizar nuestra routing table
+     * @param object
+     */
     private void updateRoutingtable(JSONObject object) {
         JSONObject neighbors = (JSONObject) object.get("neighbors");
         Set<String> keys = neighbors.keySet();
@@ -166,15 +183,29 @@ public class LinkStateRouting {
         }
     }
 
+    /**
+     * Este metodo se encarga de actualizar la tabla de enrutamiento cuando un nodo al que nos conectamos nos
+     * responde con su routing table
+     * @param message
+     */
     private void handleLSARENV(JSONObject message) {
         updateRoutingtable(message);
     }
 
+    /**
+     * metodo que actualiza la tabla de enrutamiento
+     * @param message
+     */
     private void handleLSAACTU(JSONObject message) {
         // Actualizar mi routing table
         updateRoutingtable(message);
     }
 
+    /**
+     * Metodo para tratar los mensajes de configuracion de otro nodo que inicio la conexion y
+     * transmitir esta informacion a los demas nodos vecinos
+     * @param message
+     */
     private void handleLSA(JSONObject message) {
         String[] neighbors = routingTable.get(username);
         String fromLSA = (String) message.get("from");
@@ -217,6 +248,10 @@ public class LinkStateRouting {
     }
 
 
+    /**
+     * Metodo para reenviar mensaje o mostrar el mensaje si es para el nodo
+     * @param message
+     */
     private void handleMessage(JSONObject message) {
         JSONArray path = (JSONArray) message.get("path");
         String finalUser = (String) path.get(path.size() - 1);
@@ -286,6 +321,11 @@ public class LinkStateRouting {
         this.configuraLSATimer();
     }
 
+    /**
+     * Metodo para encontrar la ruta mas corta a un nodo tomando en cuenta el routing table
+     * @param to
+     * @return
+     */
     private String[] getShortestPath(String to) {
         try {
 
@@ -361,6 +401,11 @@ public class LinkStateRouting {
         }
     }
 
+    /**
+     * Metodo para enviar un mensaje a un usuario
+     * @param to
+     * @param message
+     */
     private void sendMessage(String to, String message) {
         // Serach the shortest path to the destination
         String[] path = this.getShortestPath(to);
@@ -397,6 +442,10 @@ public class LinkStateRouting {
         }
     }
 
+    /**
+     * Main
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese su nombre de usuario (LinkStateRouting): ");
