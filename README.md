@@ -25,3 +25,9 @@ java -jar ./LinkStateRouting.jar
 ```
 
 Luego de haber ejecutado los comandos, es necesario que se ingrese el JID de algun nodo existente en la topologia y su respectiva contraseña.
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Mientras que para ejecutar el algoritmo de DVR, lo que se necesita es estar en un entorno de Python y se corre el archivo:
+```
+main.py
+```
