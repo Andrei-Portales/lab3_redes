@@ -29,6 +29,10 @@ Para pode correr el jar:
 java -jar ./lab3.jar
 ```
 
+**Tambien se puede utilizar el ejecutable ubicado en `/ejecutables/lab3.exe` para correr el programa.**
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
 Luego de haber ejecutado los comandos, es necesario que se ingrese el JID de algun nodo existente en la topologia y su respectiva contraseña.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
