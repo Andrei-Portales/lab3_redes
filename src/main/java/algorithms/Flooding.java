@@ -68,6 +68,7 @@ public class Flooding extends Topology {
                 }
             }
         } catch (Exception e) {
+            System.out.println("Error al recibir el mensaje");
             e.printStackTrace();
         }
     }
