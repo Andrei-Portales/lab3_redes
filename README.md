@@ -29,6 +29,8 @@ Para pode correr el jar:
 java -jar ./lab3.jar
 ```
 
+Se puede utilizar el archivo
+
 Luego de haber ejecutado los comandos, es necesario que se ingrese el JID de algun nodo existente en la topologia y su respectiva contraseña.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
