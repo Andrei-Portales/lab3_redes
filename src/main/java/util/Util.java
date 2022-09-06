@@ -10,14 +10,42 @@ import java.util.HashMap;
 
 public class Util {
 
-    public static HashMap<String, String[]> readTopoConfig() {
-        try {
-            JSONObject jsonObject = readFile("src/main/resources/topo.json");
+    public static ConfigData getConfigData(){
+        String dir = "src/main/resources";
+        // List dir
+        String[] files = new java.io.File(dir).list();
 
-            if (jsonObject == null) {
-                System.out.println("File not found");
-                return null;
+        HashMap<String, String[]> topo = new HashMap<>();
+        HashMap<String, String> names = new HashMap<>();
+
+        for (String file : files) {
+            if (file.endsWith(".json")) {
+                try {
+                    JSONObject jsonObject = readFile(dir + "/" + file);
+
+                    if (jsonObject == null) {
+                        System.out.println("File not found");
+                        return null;
+                    }
+
+                    String type = (String) jsonObject.get("type");
+
+                    if (type.equals("topo")){
+                        topo = readTopoConfig((JSONObject) jsonObject.get("config"));
+                    }else if (type.equals("names")) {
+                        names = readnamesConfig((JSONObject) jsonObject.get("config"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+        }
+
+        return new ConfigData(topo, names);
+    }
+
+    private static HashMap<String, String[]> readTopoConfig(JSONObject jsonObject) {
+        try {
             HashMap<String, String[]> topo = new HashMap<>();
             for (Object key : jsonObject.keySet()) {
                 String topoKey = (String) key;
@@ -32,22 +60,16 @@ public class Util {
         }
     }
 
-    public static HashMap<String, String> readnamesConfig() {
+    private static HashMap<String, String> readnamesConfig(JSONObject jsonObject) {
         try {
-            JSONObject jsonObject = readFile("src/main/resources/names.json");
-
-            if (jsonObject == null) {
-                System.out.println("File not found");
-                return null;
-            }
-            HashMap<String, String> topo = new HashMap<>();
+            HashMap<String, String> names = new HashMap<>();
 
             for (Object key : jsonObject.keySet()) {
                 String topoKey = (String) key;
                 String topoValue = (String) jsonObject.get(topoKey);
-                topo.put(topoKey, topoValue);
+                names.put(topoKey, topoValue);
             }
-            return topo;
+            return names;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

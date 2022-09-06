@@ -1,74 +1,25 @@
 package algorithms;
 
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import util.Util;
-import xmpp.Client;
-
 import java.util.*;
 
 /**
  * Link State Routing algorithm implementacion con xmpp
  */
-public class LinkStateRouting {
-
-    private String username;
-    private String password;
-    private Client client;
-
-    HashMap<String, String[]> topo;
-    HashMap<String, String> names;
+public class LinkStateRouting extends Topology {
 
     HashMap<String, String[]> routingTable;
 
     public LinkStateRouting(String username, String password) {
-        this.username = username;
-        this.password = password;
-        client = new Client();
-        this.topo = Util.readTopoConfig();
-        this.names = Util.readnamesConfig();
+        super(username, password);
         this.routingTable = new HashMap<>();
         this.routingTable.put(username, getNeighbors(username));
-    }
-
-    /**
-     * Obtener el identificador del usuario
-     *
-     * @param user
-     * @return
-     */
-    public String getUserIdentifier(String user) {
-        Set<String> keys = names.keySet();
-        for (String key : keys) {
-            if (names.get(key).equals(user)) {
-                return key;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Obtener vecinos de un usuario
-     *
-     * @param username
-     * @return
-     */
-    public String[] getNeighbors(String username) {
-        String identifier = getUserIdentifier(username);
-        String[] neighbors = topo.get(identifier);
-
-        ArrayList<String> emails = new ArrayList<>();
-
-        for (String neighbor : neighbors) {
-            emails.add(names.get(neighbor));
-        }
-        return emails.toArray(new String[emails.size()]);
     }
 
     /**
@@ -111,9 +62,10 @@ public class LinkStateRouting {
 
     /**
      * Este metodo prepara el routing table para ser posteriormente enviada en formato json
+     *
      * @return
      */
-    private JSONObject getRoutingTable(){
+    private JSONObject getRoutingTable() {
         JSONObject routingJSON = new JSONObject();
 
         for (String key : routingTable.keySet()) {
@@ -166,6 +118,7 @@ public class LinkStateRouting {
 
     /**
      * Metodo para actualizar nuestra routing table
+     *
      * @param object
      */
     private void updateRoutingtable(JSONObject object) {
@@ -186,6 +139,7 @@ public class LinkStateRouting {
     /**
      * Este metodo se encarga de actualizar la tabla de enrutamiento cuando un nodo al que nos conectamos nos
      * responde con su routing table
+     *
      * @param message
      */
     private void handleLSARENV(JSONObject message) {
@@ -194,6 +148,7 @@ public class LinkStateRouting {
 
     /**
      * metodo que actualiza la tabla de enrutamiento
+     *
      * @param message
      */
     private void handleLSAACTU(JSONObject message) {
@@ -204,6 +159,7 @@ public class LinkStateRouting {
     /**
      * Metodo para tratar los mensajes de configuracion de otro nodo que inicio la conexion y
      * transmitir esta informacion a los demas nodos vecinos
+     *
      * @param message
      */
     private void handleLSA(JSONObject message) {
@@ -250,6 +206,7 @@ public class LinkStateRouting {
 
     /**
      * Metodo para reenviar mensaje o mostrar el mensaje si es para el nodo
+     *
      * @param message
      */
     private void handleMessage(JSONObject message) {
@@ -277,6 +234,7 @@ public class LinkStateRouting {
     /**
      * Metodo para conectar con el servidor de alumchat.fun
      */
+    @Override
     public void connect() {
         client.login(username, password);
 
@@ -301,7 +259,7 @@ public class LinkStateRouting {
 
                         if (type.equals("LSA")) {
                             handleLSA(jsonObject);
-                        }else if (type.equals("LSARENV")) {
+                        } else if (type.equals("LSARENV")) {
                             handleLSARENV(jsonObject);
                         } else if (type.equals("LSAACTU")) {
                             handleLSAACTU(jsonObject);
@@ -310,7 +268,8 @@ public class LinkStateRouting {
                         }
                     }
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
         }, new PacketTypeFilter(Packet.class));
 
@@ -323,6 +282,7 @@ public class LinkStateRouting {
 
     /**
      * Metodo para encontrar la ruta mas corta a un nodo tomando en cuenta el routing table
+     *
      * @param to
      * @return
      */
@@ -346,6 +306,8 @@ public class LinkStateRouting {
                 for (String value : values) {
                     if (indexes.containsKey(value)) {
                         adjacencyMatrix[indexes.get(key)][indexes.get(value)] = 1;
+                    }else {
+                        adjacencyMatrix[indexes.get(key)][indexes.get(key)] = Integer.MAX_VALUE;
                     }
                 }
             }
@@ -403,11 +365,13 @@ public class LinkStateRouting {
 
     /**
      * Metodo para enviar un mensaje a un usuario
+     *
      * @param to
      * @param message
      */
-    private void sendMessage(String to, String message) {
-        // Serach the shortest path to the destination
+    @Override
+    protected void sendMessage(String to, String message) {
+        // Search the shortest path to the destination
         String[] path = this.getShortestPath(to);
 
         if (path == null) {
@@ -443,10 +407,9 @@ public class LinkStateRouting {
     }
 
     /**
-     * Main
-     * @param args
+     * Start all
      */
-    public static void main(String[] args) {
+    public static void start() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese su nombre de usuario (LinkStateRouting): ");
         String username = scanner.nextLine();

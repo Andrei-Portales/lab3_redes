@@ -1,9 +1,12 @@
 {
-  "A": "bot1_prueba@alumchat.fun",
-  "B": "bot2_prueba@alumchat.fun",
-  "C": "bot3_pruebas@alumchat.fun",
-  "D": "bot4_pruebas@alumchat.fun",
-  "E": "bot5_pruebas@alumchat.fun",
-  "F": "bot6_prueba@alumchat.fun",
-  "G": "bot7_pruebas@alumchat.fun"
+  "type": "names",
+  "config": {
+    "A": "bot1_prueba@alumchat.fun",
+    "B": "bot2_prueba@alumchat.fun",
+    "C": "bot3_pruebas@alumchat.fun",
+    "D": "bot4_pruebas@alumchat.fun",
+    "E": "bot5_pruebas@alumchat.fun",
+    "F": "bot6_prueba@alumchat.fun",
+    "G": "bot7_pruebas@alumchat.fun"
+  }
 }
